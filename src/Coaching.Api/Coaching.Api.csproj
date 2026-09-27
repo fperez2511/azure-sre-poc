@@ -17,7 +17,7 @@
     <PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.2.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.46.0" />
     <!-- The Cosmos DB v3 SDK requires an explicit Newtonsoft.Json reference -->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <!-- Timeout + circuit breaker around the Cosmos DB dependency -->
     <PackageReference Include="Polly.Core" Version="8.5.0" />
   </ItemGroup>
