@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <RootNamespace>Coaching.Api</RootNamespace>
+    <!-- Keep the container small and start fast -->
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Entra ID auth to Cosmos DB with the container app's managed identity -->
+    <PackageReference Include="Azure.Identity" Version="1.13.2" />
+    <!-- OpenTelemetry distro: requests, dependencies, logs, metrics -> Application Insights -->
+    <PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.2.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.46.0" />
+    <!-- The Cosmos DB v3 SDK requires an explicit Newtonsoft.Json reference -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <!-- Timeout + circuit breaker around the Cosmos DB dependency -->
+    <PackageReference Include="Polly.Core" Version="8.5.0" />
+  </ItemGroup>
+
+</Project>

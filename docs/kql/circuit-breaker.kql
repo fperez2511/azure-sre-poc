@@ -1,0 +1,7 @@
+// When did the Cosmos DB circuit breaker open / half-open / close?
+AppTraces
+| where TimeGenerated > ago({{WINDOW}})
+| where AppRoleName == "coaching-api"
+| where Message has "Circuit" or Message has "STALE catalog"
+| project TimeGenerated, SeverityLevel, Message, AppRoleInstance
+| order by TimeGenerated desc

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": { "value": "${AZURE_ENV_NAME}" },
+    "location": { "value": "${AZURE_LOCATION}" },
+    "principalId": { "value": "${AZURE_PRINCIPAL_ID}" },
+    "principalType": { "value": "${AZURE_PRINCIPAL_TYPE=User}" },
+
+    "apiImage": { "value": "${SERVICE_API_IMAGE_NAME=}" },
+    "apiExists": { "value": "${SERVICE_API_RESOURCE_EXISTS=false}" },
+    "minReplicas": { "value": "${MIN_REPLICAS=0}" },
+    "maxReplicas": { "value": "${MAX_REPLICAS=3}" },
+    "containerAppsZoneRedundant": { "value": "${ACA_ZONE_REDUNDANT=true}" },
+
+    "cosmosEnableFreeTier": { "value": "${COSMOS_FREE_TIER=true}" },
+    "cosmosSecondaryLocation": { "value": "${COSMOS_SECONDARY_LOCATION=}" },
+    "cosmosThroughput": { "value": "${COSMOS_THROUGHPUT=400}" },
+
+    "alertEmail": { "value": "${ALERT_EMAIL=}" },
+    "logDailyCapGb": { "value": "${LOG_DAILY_CAP_GB=0.5}" },
+    "enableBurnRateAlert": { "value": "${ENABLE_BURN_RATE_ALERT=true}" },
+
+    "deployChaos": { "value": "${DEPLOY_CHAOS=true}" },
+    "chaosLocation": { "value": "${CHAOS_LOCATION=}" },
+    "chaosFaultDuration": { "value": "${CHAOS_FAULT_DURATION=PT10M}" },
+
+    "deploySreAgent": { "value": "${DEPLOY_SRE_AGENT=false}" },
+    "sreAgentLocation": { "value": "${SRE_AGENT_LOCATION=eastus2}" },
+    "sreAgentAccessLevel": { "value": "${SRE_AGENT_ACCESS_LEVEL=High}" },
+    "sreAgentActionMode": { "value": "${SRE_AGENT_ACTION_MODE=Review}" },
+    "sreAgentMonthlyAauLimit": { "value": "${SRE_AGENT_MONTHLY_AAU_LIMIT=500}" }
+  }
+}

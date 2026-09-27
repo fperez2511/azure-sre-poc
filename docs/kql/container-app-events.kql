@@ -1,0 +1,6 @@
+// Platform view: revision provisioning, probe failures, restarts, crashes.
+ContainerAppSystemLogs_CL
+| where TimeGenerated > ago({{WINDOW}})
+| project TimeGenerated, RevisionName_s, ReplicaName_s, Reason_s, Log_s
+| order by TimeGenerated desc
+| take 200

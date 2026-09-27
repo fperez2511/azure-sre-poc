@@ -1,0 +1,13 @@
+// Availability SLI per critical user flow.
+// good event = any response below 500 (4xx are the caller's fault and do not burn budget).
+// Placeholder {{WINDOW}} is replaced by scripts/slo-report.sh (e.g. 24h). In the portal, replace it yourself.
+AppRequests
+| where TimeGenerated > ago({{WINDOW}})
+| where AppRoleName == "coaching-api" and Url has "/api/"
+| extend flow = case(Name has "POST" and Name has "bookings", "create-booking",
+                     Name has "offerings", "browse-offerings",
+                     "view-bookings")
+| summarize total = count(), bad = countif(toint(ResultCode) >= 500) by flow
+| extend availabilityPct = round(100.0 * (total - bad) / total, 3)
+| project flow, total, bad, availabilityPct
+| order by flow asc

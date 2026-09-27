@@ -1,0 +1,101 @@
+[
+  {
+    "id": "career-1on1-60",
+    "category": "one-on-one",
+    "name": "Career Clarity 1-on-1",
+    "description": "A focused 60-minute video call to map your next career move, with a written action plan afterwards.",
+    "durationMinutes": 60,
+    "maxAttendees": 1,
+    "priceUsd": 150,
+    "pricingUnit": "per-session",
+    "active": true
+  },
+  {
+    "id": "exec-1on1-90",
+    "category": "one-on-one",
+    "name": "Executive Presence 1-on-1",
+    "description": "90 minutes of leadership coaching for directors and above: stakeholder mapping, feedback, and a 30-day plan.",
+    "durationMinutes": 90,
+    "maxAttendees": 1,
+    "priceUsd": 300,
+    "pricingUnit": "per-session",
+    "active": true
+  },
+  {
+    "id": "group-circle-90",
+    "category": "group",
+    "name": "Growth Circle (group call)",
+    "description": "Small-group coaching call for up to 8 people working on the same theme. Priced per attendee.",
+    "durationMinutes": 90,
+    "maxAttendees": 8,
+    "priceUsd": 60,
+    "pricingUnit": "per-attendee",
+    "active": true
+  },
+  {
+    "id": "group-mastermind-120",
+    "category": "group",
+    "name": "Founders Mastermind (group call)",
+    "description": "Two-hour peer mastermind for startup founders, facilitated by a senior coach. Up to 6 people.",
+    "durationMinutes": 120,
+    "maxAttendees": 6,
+    "priceUsd": 120,
+    "pricingUnit": "per-attendee",
+    "active": true
+  },
+  {
+    "id": "biz-keynote-60",
+    "category": "business-presentation",
+    "name": "Keynote: Resilient Teams",
+    "description": "A 60-minute keynote for your company event (on-site or virtual) on building resilient, high-trust teams.",
+    "durationMinutes": 60,
+    "maxAttendees": 500,
+    "priceUsd": 2500,
+    "pricingUnit": "per-session",
+    "active": true
+  },
+  {
+    "id": "biz-leadership-briefing-120",
+    "category": "business-presentation",
+    "name": "Leadership Briefing for Executives",
+    "description": "Two-hour interactive presentation for leadership teams on coaching culture and feedback systems.",
+    "durationMinutes": 120,
+    "maxAttendees": 40,
+    "priceUsd": 4200,
+    "pricingUnit": "per-session",
+    "active": true
+  },
+  {
+    "id": "workshop-resilience-halfday",
+    "category": "workshop",
+    "name": "Team Resilience Workshop (half day)",
+    "description": "Hands-on half-day workshop: stress mapping, recovery rituals and team agreements. Up to 25 participants.",
+    "durationMinutes": 240,
+    "maxAttendees": 25,
+    "priceUsd": 4000,
+    "pricingUnit": "per-session",
+    "active": true
+  },
+  {
+    "id": "workshop-speaking-fullday",
+    "category": "workshop",
+    "name": "Public Speaking Bootcamp (full day)",
+    "description": "Full-day workshop with recorded practice rounds and individual feedback. Up to 20 participants.",
+    "durationMinutes": 420,
+    "maxAttendees": 20,
+    "priceUsd": 6500,
+    "pricingUnit": "per-session",
+    "active": true
+  },
+  {
+    "id": "workshop-legacy-okr",
+    "category": "workshop",
+    "name": "OKR Workshop (retired)",
+    "description": "Retired offering kept to show that inactive items are filtered out of the catalog.",
+    "durationMinutes": 240,
+    "maxAttendees": 30,
+    "priceUsd": 3500,
+    "pricingUnit": "per-session",
+    "active": false
+  }
+]

@@ -1,0 +1,12 @@
+// Error budget for the 99.5% availability SLO over the window.
+// budgetConsumedPct > 100 means the SLO is broken for this window: freeze risky releases,
+// prioritise reliability work (that is the "error budget policy" in the README).
+let slo = 99.5;
+AppRequests
+| where TimeGenerated > ago({{WINDOW}})
+| where AppRoleName == "coaching-api" and Url has "/api/"
+| summarize total = count(), bad = countif(toint(ResultCode) >= 500)
+| extend availabilityPct = round(100.0 * (total - bad) / total, 3)
+| extend allowedBad = round(total * (100.0 - slo) / 100.0, 1)
+| extend budgetConsumedPct = iff(allowedBad == 0, 0.0, round(100.0 * bad / allowedBad, 1))
+| project sloPct = slo, total, bad, availabilityPct, allowedBad, budgetConsumedPct

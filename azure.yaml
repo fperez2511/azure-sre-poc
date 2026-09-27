@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: azure-sre-poc
+metadata:
+  template: azure-sre-poc@1.0.0
+
+infra:
+  provider: bicep
+  path: infra
+  module: main
+
+services:
+  api:
+    project: ./src/Coaching.Api
+    language: dotnet
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      remoteBuild: true # build in ACR – no local Docker needed
+
+hooks:
+  postprovision:
+    posix:
+      shell: sh
+      run: |
+        echo ""
+        echo "Infrastructure ready."
+        echo "  First time? After 'azd up' finishes, run 'azd provision' once more to enable health probes."
+        echo "  Then: pip install -r data/requirements.txt && python data/seed.py && ./scripts/smoke-test.sh"
+      interactive: false
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host ""
+        Write-Host "Infrastructure ready."
+        Write-Host "  First time? After 'azd up' finishes, run 'azd provision' once more to enable health probes."
+        Write-Host "  Then: pip install -r data/requirements.txt; python data/seed.py; bash ./scripts/smoke-test.sh"
+      interactive: false
+      continueOnError: true

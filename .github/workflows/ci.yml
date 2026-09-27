@@ -1,0 +1,50 @@
+name: ci
+
+# Fast feedback on every pull request: build + unit tests, Bicep lint, script checks.
+# Nothing here touches Azure, so forks can run it without any secrets.
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: .NET build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet restore src/Coaching.slnx
+      - run: dotnet build src/Coaching.slnx --no-restore -c Release
+      - run: dotnet test src/Coaching.slnx --no-build -c Release --logger "trx;LogFileName=results.trx"
+      - name: Container image builds
+        run: docker build -t coaching-api:ci src/Coaching.Api
+
+  infra:
+    name: Bicep build and lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: az bicep install
+      - run: az bicep build --file infra/main.bicep --stdout > /dev/null
+      - run: az bicep lint --file infra/main.bicep
+
+  scripts:
+    name: Scripts and data tooling
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        run: shellcheck -x -S warning scripts/*.sh
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m py_compile data/*.py
+      - name: JSON is valid
+        run: for f in data/seed/*.json data/schema/*.json infra/*.json; do python -m json.tool "$f" > /dev/null; done

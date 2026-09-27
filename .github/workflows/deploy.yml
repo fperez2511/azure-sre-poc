@@ -1,0 +1,59 @@
+name: deploy
+
+# Provision + deploy with azd using OpenID Connect (no secrets stored in GitHub).
+# One-time setup from your machine:  azd pipeline config
+#   -> creates a service principal with federated credentials for this repo and sets the
+#      repository variables below. See README > "Continuous delivery".
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'infra/**'
+      - 'data/schema/**'
+      - 'azure.yaml'
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false # never cancel a deployment half-way
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+      AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+      AZURE_PRINCIPAL_TYPE: ServicePrincipal
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install azd
+        uses: Azure/setup-azd@v2
+
+      - name: Log in with OpenID Connect
+        run: |
+          azd auth login \
+            --client-id "$AZURE_CLIENT_ID" \
+            --federated-credential-provider github \
+            --tenant-id "$AZURE_TENANT_ID"
+
+      - name: Provision infrastructure
+        run: azd provision --no-prompt
+
+      - name: Deploy the API
+        run: azd deploy --no-prompt
+
+      - name: Smoke test (health + critical read flow)
+        run: |
+          uri="$(azd env get-value SERVICE_API_URI)"
+          curl --fail --retry 10 --retry-delay 6 --retry-all-errors -s "$uri/healthz/ready"
+          curl --fail --retry 5 --retry-delay 6 --retry-all-errors -s "$uri/api/offerings" > /dev/null
+          echo "Deployed: $uri" >> "$GITHUB_STEP_SUMMARY"

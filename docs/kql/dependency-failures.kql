@@ -1,0 +1,8 @@
+// Calls from the API to Cosmos DB: volume, failures and latency per minute.
+AppDependencies
+| where TimeGenerated > ago({{WINDOW}})
+| where AppRoleName == "coaching-api"
+| where Target has "documents.azure.com" or Type has "Cosmos" or Type has "DocumentDB"
+| summarize calls = count(), failed = countif(Success == false), p95ms = round(percentile(DurationMs, 95), 0)
+            by minute = bin(TimeGenerated, 1m), ResultCode
+| order by minute desc

@@ -1,0 +1,17 @@
+# azd environment state (contains subscription-specific values)
+.azure/
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# Python
+__pycache__/
+.venv/
+
+# Lab outputs
+traffic-*.csv
+gameday-*

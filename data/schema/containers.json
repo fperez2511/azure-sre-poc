@@ -1,0 +1,40 @@
+[
+  {
+    "name": "offerings",
+    "partitionKeyPath": "/category",
+    "defaultTtl": -1,
+    "indexingPolicy": {
+      "indexingMode": "consistent",
+      "automatic": true,
+      "includedPaths": [ { "path": "/*" } ],
+      "excludedPaths": [
+        { "path": "/description/?" },
+        { "path": "/\"_etag\"/?" }
+      ]
+    }
+  },
+  {
+    "name": "bookings",
+    "partitionKeyPath": "/customerId",
+    "defaultTtl": -1,
+    "indexingPolicy": {
+      "indexingMode": "consistent",
+      "automatic": true,
+      "includedPaths": [ { "path": "/*" } ],
+      "excludedPaths": [
+        { "path": "/notes/?" },
+        { "path": "/\"_etag\"/?" }
+      ],
+      "compositeIndexes": [
+        [
+          { "path": "/customerId", "order": "ascending" },
+          { "path": "/startTimeUtc", "order": "descending" }
+        ],
+        [
+          { "path": "/category", "order": "ascending" },
+          { "path": "/startTimeUtc", "order": "ascending" }
+        ]
+      ]
+    }
+  }
+]

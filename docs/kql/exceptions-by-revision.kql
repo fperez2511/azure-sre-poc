@@ -1,0 +1,8 @@
+// Which exceptions, in which revision (AppVersion = Container Apps revision name)?
+// A new exception type appearing right after a new revision = strong "bad release" signal.
+AppExceptions
+| where TimeGenerated > ago({{WINDOW}})
+| where AppRoleName == "coaching-api"
+| summarize count(), firstSeen = min(TimeGenerated), lastSeen = max(TimeGenerated)
+            by revision = AppVersion, ExceptionType, OuterMessage
+| order by firstSeen desc

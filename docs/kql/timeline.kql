@@ -1,0 +1,13 @@
+// Minute-by-minute view of an incident or chaos experiment.
+// {{START}} / {{END}} are ISO timestamps (scripts/gameday.sh fills them in).
+AppRequests
+| where TimeGenerated between (datetime({{START}}) .. datetime({{END}}))
+| where AppRoleName == "coaching-api" and Url has "/api/"
+| summarize requests = count(),
+            errors5xx = countif(toint(ResultCode) >= 500),
+            p95ms = round(percentile(DurationMs, 95), 0),
+            revisions = make_set(AppVersion)
+            by minute = bin(TimeGenerated, 1m)
+| extend availabilityPct = round(100.0 * (requests - errors5xx) / requests, 2)
+| project minute, requests, errors5xx, availabilityPct, p95ms, revisions
+| order by minute asc

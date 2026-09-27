@@ -1,0 +1,61 @@
+name: chaos-gameday
+
+# Run a chaos experiment under synthetic load and publish the evidence to the job summary.
+# Continuous validation: schedule it (uncomment `schedule`) once you trust your hypotheses.
+on:
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: Which experiment to run
+        type: choice
+        options: [ blackout, failover ]
+        default: blackout
+      rps:
+        description: Requests per second during the game day
+        default: '3'
+  # schedule:
+  #   - cron: '0 14 * * 3' # Wednesdays 14:00 UTC – when people are around to respond
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: gameday
+  cancel-in-progress: false
+
+jobs:
+  gameday:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+      AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: Azure/setup-azd@v2
+
+      - name: Load environment outputs
+        run: |
+          azd auth login --client-id "$AZURE_CLIENT_ID" --federated-credential-provider github --tenant-id "$AZURE_TENANT_ID"
+          azd env new "$AZURE_ENV_NAME" --subscription "$AZURE_SUBSCRIPTION_ID" --location "$AZURE_LOCATION" --no-prompt || azd env select "$AZURE_ENV_NAME"
+          azd env refresh --no-prompt
+
+      - name: Game day
+        run: ./scripts/gameday.sh "${{ inputs.experiment }}" 120 180 "${{ inputs.rps }}"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gameday-evidence
+          path: gameday-*

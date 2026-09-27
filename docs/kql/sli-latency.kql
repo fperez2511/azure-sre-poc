@@ -1,0 +1,15 @@
+// Latency SLI per flow: % of requests faster than the flow's threshold, plus percentiles.
+// Thresholds: browse 300 ms, create-booking 800 ms, view-bookings 500 ms (see README > SLOs).
+AppRequests
+| where TimeGenerated > ago({{WINDOW}})
+| where AppRoleName == "coaching-api" and Url has "/api/"
+| extend flow = case(Name has "POST" and Name has "bookings", "create-booking",
+                     Name has "offerings", "browse-offerings",
+                     "view-bookings")
+| extend thresholdMs = case(flow == "create-booking", 800.0, flow == "browse-offerings", 300.0, 500.0)
+| summarize total = count(), fast = countif(DurationMs <= thresholdMs),
+            p50 = percentile(DurationMs, 50), p95 = percentile(DurationMs, 95), p99 = percentile(DurationMs, 99)
+            by flow, thresholdMs
+| extend latencySliPct = round(100.0 * fast / total, 2)
+| project flow, thresholdMs, total, latencySliPct, p50 = round(p50, 0), p95 = round(p95, 0), p99 = round(p99, 0)
+| order by flow asc

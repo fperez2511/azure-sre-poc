@@ -1,0 +1,7 @@
+// What Cosmos DB itself saw (resource logs): status codes, RU and latency per minute.
+// Useful to tell "Cosmos DB was down" apart from "the app could not reach Cosmos DB" (Lab 5).
+CDBDataPlaneRequests
+| where TimeGenerated > ago({{WINDOW}})
+| summarize requests = count(), ru = round(sum(RequestCharge), 1), p95ms = round(percentile(DurationMs, 95), 0)
+            by minute = bin(TimeGenerated, 1m), StatusCode, Region = RegionName
+| order by minute desc
