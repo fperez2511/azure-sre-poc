@@ -16,7 +16,7 @@ jobs:
     name: .NET build and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
@@ -30,7 +30,7 @@ jobs:
     name: Bicep build and lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: az bicep install
       - run: az bicep build --file infra/main.bicep --stdout > /dev/null
       - run: az bicep lint --file infra/main.bicep
@@ -39,7 +39,7 @@ jobs:
     name: Scripts and data tooling
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: shellcheck
         run: shellcheck -x -S warning scripts/*.sh
       - uses: actions/setup-python@v5
