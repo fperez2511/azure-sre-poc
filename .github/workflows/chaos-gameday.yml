@@ -54,7 +54,7 @@ jobs:
       - name: Game day
         run: ./scripts/gameday.sh "${{ inputs.experiment }}" 120 180 "${{ inputs.rps }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: gameday-evidence
