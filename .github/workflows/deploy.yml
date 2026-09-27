@@ -33,7 +33,7 @@ jobs:
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
       AZURE_PRINCIPAL_TYPE: ServicePrincipal
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install azd
         uses: Azure/setup-azd@v2
