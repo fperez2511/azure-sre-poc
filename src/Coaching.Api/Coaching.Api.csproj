@@ -19,7 +19,7 @@
     <!-- The Cosmos DB v3 SDK requires an explicit Newtonsoft.Json reference -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <!-- Timeout + circuit breaker around the Cosmos DB dependency -->
-    <PackageReference Include="Polly.Core" Version="8.5.0" />
+    <PackageReference Include="Polly.Core" Version="8.8.0" />
   </ItemGroup>
 
 </Project>
