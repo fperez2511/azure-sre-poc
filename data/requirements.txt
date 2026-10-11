@@ -1,2 +1,2 @@
 azure-cosmos>=4.7,<5
-azure-identity>=1.17,<2
+azure-identity>=1.26.0,<2
