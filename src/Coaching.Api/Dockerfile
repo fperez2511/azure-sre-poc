@@ -2,7 +2,7 @@
 # Built remotely in Azure Container Registry by `azd deploy` (remoteBuild: true),
 # so you do not need Docker installed locally.
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:11.0 AS build
 WORKDIR /src
 COPY Coaching.Api.csproj ./
 RUN dotnet restore Coaching.Api.csproj
